@@ -40,5 +40,11 @@ public class UserService {
             throw new RuntimeException("Error hashing password", e);
         }
     }
+
+    public boolean isUserAuthenticated(String username) {
+        // В реальном приложении здесь должна быть проверка сессии или токена
+        // Для простоты примера, мы просто проверяем, существует ли пользователь
+        return repository.findByUsername(username).isPresent();
+    }
 }
 

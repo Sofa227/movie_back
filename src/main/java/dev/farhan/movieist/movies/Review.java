@@ -14,12 +14,15 @@ import java.time.LocalDateTime;
 public class Review {
     private ObjectId id;
     private String body;
+    private String username;
     private LocalDateTime created;
     private LocalDateTime updated;
 
-    public Review(String body, LocalDateTime created, LocalDateTime updated) {
+    public Review(String body, String username, LocalDateTime created, LocalDateTime updated) {
         this.body = body;
+        this.username = username;
         this.created = created;
         this.updated = updated;
     }
 }
+

@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/reviews")
@@ -14,9 +13,16 @@ public class ReviewController {
     @Autowired
     private ReviewService service;
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Review> createReview(@RequestBody Map<String, String> payload) {
-
-        return new ResponseEntity<Review>(service.createReview(payload.get("reviewBody"), payload.get("imdbId")), HttpStatus.OK);
+        try {
+            return new ResponseEntity<Review>(
+                    service.createReview(payload.get("reviewBody"), payload.get("imdbId"), payload.get("username")),
+                    HttpStatus.CREATED
+            );
+        } catch (IllegalStateException e) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
     }
 }
+
