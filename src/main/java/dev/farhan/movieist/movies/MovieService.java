@@ -1,21 +1,18 @@
 package dev.farhan.movieist.movies;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class MovieService {
+    private final MovieRepository movieRepository;
 
-    @Autowired
-    private MovieRepository repository;
-
-    public List<Movie> findAllMovies() {
-        return repository.findAll();
+    public MovieService(MovieRepository movieRepository) {
+        this.movieRepository = movieRepository;
     }
-    public Optional<Movie> findMovieByImdbId(String imdbId) {
-        return repository.findMovieByImdbId(imdbId);
+
+    public List<Movie> searchMoviesByTitle(String title) {
+        return movieRepository.findByTitleContainingIgnoreCase(title);
     }
 }

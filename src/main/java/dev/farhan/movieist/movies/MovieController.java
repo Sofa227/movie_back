@@ -1,27 +1,35 @@
 package dev.farhan.movieist.movies;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/movies")
 public class MovieController {
+    private final MovieService movieService;
 
-    @Autowired
-    private MovieService service;
-
-    @GetMapping
-    public ResponseEntity<List<Movie>> getMovies() {
-        return new ResponseEntity<List<Movie>>(service.findAllMovies(), HttpStatus.OK);
+    public MovieController(MovieService movieService) {
+        this.movieService = movieService;
     }
 
-    @GetMapping("/{imdbId}")
-    public ResponseEntity<Optional<Movie>> getSingleMovie(@PathVariable String imdbId){
-        return new ResponseEntity<Optional<Movie>>(service.findMovieByImdbId(imdbId), HttpStatus.OK);
+    @GetMapping("/movies/search")
+    public ResponseEntity<List<Movie>> searchMovies(@RequestParam String title) {
+        List<Movie> movies = movieService.searchMoviesByTitle(title);
+        return ResponseEntity.ok(movies);
+    }
+
+    @Configuration
+    public class AppConfig {
+
+        @Bean
+        public RestTemplate restTemplate() {
+            return new RestTemplate();
+        }
     }
 }
