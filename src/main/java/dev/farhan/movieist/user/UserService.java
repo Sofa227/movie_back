@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -42,9 +43,30 @@ public class UserService {
     }
 
     public boolean isUserAuthenticated(String username) {
-        // В реальном приложении здесь должна быть проверка сессии или токена
-        // Для простоты примера, мы просто проверяем, существует ли пользователь
         return repository.findByUsername(username).isPresent();
+    }
+
+    public User addToWishlist(String username, String movieId) {
+        User user = findByUsername(username);
+        if (user != null && !user.getWishlist().contains(movieId)) {
+            user.getWishlist().add(movieId);
+            return repository.save(user);
+        }
+        return user;
+    }
+
+    public User removeFromWishlist(String username, String movieId) {
+        User user = findByUsername(username);
+        if (user != null) {
+            user.getWishlist().remove(movieId);
+            return repository.save(user);
+        }
+        return user;
+    }
+
+    public List<String> getWishlist(String username) {
+        User user = findByUsername(username);
+        return user != null ? user.getWishlist() : null;
     }
 }
 
