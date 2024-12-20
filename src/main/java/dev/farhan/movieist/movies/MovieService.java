@@ -15,7 +15,12 @@ public class MovieService {
     public List<Movie> findAllMovies() {
         return repository.findAll();
     }
+
     public Optional<Movie> findMovieByImdbId(String imdbId) {
         return repository.findMovieByImdbId(imdbId);
+    }
+
+    public List<Movie> searchMovies(String query) {
+        return repository.findByTitleContainingIgnoreCase(query);
     }
 }
